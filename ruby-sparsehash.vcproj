@@ -472,6 +472,18 @@
 			RelativePath=".\README"
 			>
 		</File>
+		<File
+			RelativePath=".\sparsehash-mswin32.gemspec"
+			>
+		</File>
+		<File
+			RelativePath=".\sparsehash.gemspec"
+			>
+		</File>
+		<File
+			RelativePath=".\sparsehash1.9-mswin32.gemspec"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>
