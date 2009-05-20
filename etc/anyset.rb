@@ -1,7 +1,7 @@
 # * Sparsehash::SparseHashSet
 # * Sparsehash::DenseHashSet
 # * STL::Set
-# * GNU::HashMap (gcc only)
+# * GNU::HashSet (gcc only)
 #
 # (include Enumerable)
 class AnySet
