@@ -32,6 +32,11 @@ gem install sparsehash
       puts v
     end
 
+== Performance
+
+link:memory.png
+link:time.png
+
 == Project Page
 
 http://rubyforge.org/projects/sparsehash
