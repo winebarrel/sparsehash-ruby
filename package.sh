@@ -6,6 +6,7 @@ rm -rf doc
 
 FILES='README etc/anymap.rb etc/anyset.rb'
 rdoc -w 4 -SHN -f darkfish -m README --title 'sparsehash - Ruby bindings for Google Sparse Hash.' $FILES
+cp etc/*.png doc
 
 mkdir work
 cp -r * work 2> /dev/null
