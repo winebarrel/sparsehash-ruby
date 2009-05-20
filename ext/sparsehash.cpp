@@ -6,6 +6,8 @@
 #include <map>
 #include <set>
 
+#include <cstring>
+
 #ifdef __GNUC__
 #include <ext/hash_map>
 #include <ext/hash_set>
