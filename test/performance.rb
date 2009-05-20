@@ -11,9 +11,11 @@ classes = {
 }
 
 $rnums = {}
+min = '10000'
+max = '10000000'
 
-('1000000'.length - '1000'.length).times do |i|
-  $rnums[i] = '1000' + '0' * i
+(max.length - min.length).times do |i|
+  $rnums[i] = min + '0' * i
 end
 
 tdata = {}
