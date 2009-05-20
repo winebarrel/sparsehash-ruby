@@ -1,58 +1,54 @@
-require 'sparsehash'
-require 'timeout'
+#!/usr/bin/env ruby
+require 'rubygems'
+require 'gruff'
 
-include Sparsehash
-include STL
-include GNU if defined?(GNU)
+classes = {
+  'Hash'          => 'Hash',
+  'SparseHashMap' => 'SparseHashMap',
+  'DenseHashMap'  => 'DenseHashMap',
+  'SLT::Map'      => 'Map',
+  'GNU::HashMap'  => 'HashMap',
+}
 
-if RUBY_PLATFORM.downcase =~ /mswin(?!ce)|mingw|cygwin|bccwin/
-  def memoryusage()
-    tasks = `tasklist`
-    lines = tasks.split("\n")
-    lines.each do |line|
-      row = line.split(/\s+/)
-      if row[1].to_i == $$
-        return row[3].gsub(',', '').to_i / 1024.0
-      end
-    end
-    return -1;
-  end
-else
-  def memoryusage()
-    status = `cat /proc/#{$$}/status`
-    lines = status.split("\n")
-    lines.each do |line|
-      if line =~ /^VmRSS:/
-        line.gsub!(/.*:\s*(\d+).*/, '\1')
-        return line.to_i / 1024.0
-      end
-    end
-    return -1;
-  end
+$rnums = {}
+
+('1000000'.length - '1000'.length).times do |i|
+  $rnums[i] = '1000' + '0' * i
 end
 
-clazz = Object.const_get(ARGV[0]) # Hash, SparseHashMap, DenseHashMap
-rnum = ARGV[1].to_i # 100, 10000, 1000000
+tdata = {}
+mdata = {}
 
-puts("#{clazz}: #{rnum}")
-time = Time.now
-size = memoryusage
-hash = clazz.new
+classes.each do |name, c|
+  ts = []
+  ms = []
 
-begin
-  timeout(120) do
-    (0...rnum).each do |i|
-      buf = sprintf("%08d", i)
-      hash[buf] = buf
-    end
-
-    time = Time.now - time
-    GC.start
-    size = memoryusage - size
-
-    printf("Time: %.3f sec.\n", time)
-    printf("Usage: %.3f MB\n", size)
+  $rnums.values.each do |rnum|
+    wd = File.expand_path(File.dirname(__FILE__))
+    t, m = (`ruby #{wd}/performance0.rb #{c} #{rnum}`).split(',')
+    ts << t.to_f
+    ms << m.to_f
   end
-rescue Timeout::Error
-  printf("-----\n\n")
+
+  tdata[name] = ts
+  mdata[name] = ms
 end
+
+def draw(title, data, y_axis_label, filename)
+  g = Gruff::Bar.new 500
+  g.theme_pastel
+  g.title = title
+
+  data.each do |name, ds|
+    g.data(name, ds)
+  end
+
+  g.labels = $rnums
+  g.x_axis_label = 'number of keys'
+  g.y_axis_label = y_axis_label
+
+  g.write(filename)
+end
+
+draw('Time', tdata, 'sec', 'time.png')
+draw('Memory', mdata, 'MB', 'memory.png')
