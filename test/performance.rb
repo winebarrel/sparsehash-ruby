@@ -35,7 +35,7 @@ classes.each do |name, c|
 end
 
 def draw(title, data, y_axis_label, filename)
-  g = Gruff::Bar.new 500
+  g = Gruff::Bar.new 350
   g.theme_pastel
   g.title = title
 

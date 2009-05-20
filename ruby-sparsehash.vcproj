@@ -404,6 +404,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\test\performance0.rb"
+				>
+			</File>
+			<File
 				RelativePath=".\test\test.rb"
 				>
 			</File>
@@ -425,6 +429,14 @@
 			</File>
 			<File
 				RelativePath=".\etc\anyset.rb"
+				>
+			</File>
+			<File
+				RelativePath=".\etc\memory.png"
+				>
+			</File>
+			<File
+				RelativePath=".\etc\time.png"
 				>
 			</File>
 		</Filter>
