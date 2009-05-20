@@ -20,25 +20,27 @@ namespace {
 
 struct sparsehash_equal_key {
   bool operator() (const VALUE &x, const VALUE &y) const {
-    return (rb_funcall(x, rb_intern("=="), 1, y) == Qtrue);
+    if (TYPE(x) == T_STRING && TYPE(y) == T_STRING) {
+      const char *x_ptr = RSTRING_PTR(x);
+      const char *y_ptr = RSTRING_PTR(y);
+      long x_len = RSTRING_LEN(x);
+      long y_len = RSTRING_LEN(y);
+      return (x_len == y_len) && (x_len == 0 || (strncmp(x_ptr, y_ptr, x_len) == 0));
+    } else {
+      return (x == y);
+    }
   }
 };
 
 struct sparsehash_hash {
   size_t operator() (const VALUE &x) const {
-    VALUE hash = rb_funcall(x, rb_intern("hash"), 0);
-    return NUM2INT(hash);
+    return (TYPE(x) == T_STRING) ? rb_str_hash(x) : x;
   }
 };
 
 struct stl_key_compare {
   bool operator() (const VALUE &x, const VALUE &y) const {
-    VALUE hash_x = rb_funcall(x, rb_intern("hash"), 0);
-    VALUE hash_y = rb_funcall(y, rb_intern("hash"), 0);
-    int i_hash_x = NUM2INT(hash_x);
-    int i_hash_y = NUM2INT(hash_y);
-
-    return (i_hash_x < i_hash_y);
+    return (rb_str_hash(x) < rb_str_hash(y));
   }
 };
 
@@ -82,37 +84,8 @@ void sparsehash_initialize<DHSet>(DHSet *x) {
 
 template <class T>
 void sparsehash_validate_key(VALUE &x) {
-}
-
-template <>
-void sparsehash_validate_key<SHMap>(VALUE &x) {
-  if (NIL_P(x)) {
-    rb_raise(rb_eArgError, "Invalid key: nil");
-  }
-}
-
-template <>
-void sparsehash_validate_key<SHSet>(VALUE &x) {
-  if (NIL_P(x)) {
-    rb_raise(rb_eArgError, "Invalid key: nil");
-  }
-}
-
-template <>
-void sparsehash_validate_key<DHMap>(VALUE &x) {
-  if (!x) {
-    rb_raise(rb_eArgError, "Invalid key: false");
-  } else if(NIL_P(x)) {
-    rb_raise(rb_eArgError, "Invalid key: nil");
-  }
-}
-
-template <>
-void sparsehash_validate_key<DHSet>(VALUE &x) {
-  if (!x) {
-    rb_raise(rb_eArgError, "Invalid key: false");
-  } else if(NIL_P(x)) {
-    rb_raise(rb_eArgError, "Invalid key: nil");
+  if (TYPE(x) != T_STRING) {
+    rb_raise(rb_eArgError, "Invalid key (String only)");
   }
 }
 
