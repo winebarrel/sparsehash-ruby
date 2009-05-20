@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name              = 'sparsehash'
-  spec.version           = '0.1.0'
+  spec.version           = '0.1.1'
   spec.summary           = 'Ruby bindings for Google Sparse Hash.'
   spec.files             = Dir.glob('ext/*.*') + %w(README etc/anymap.rb etc/anyset.rb)
   spec.author            = 'winebarrel'
