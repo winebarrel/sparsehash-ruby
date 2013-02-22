@@ -8,7 +8,12 @@ Ruby bindings for Google Sparse Hash.
 
 see {Google Sparse Hash}[http://goog-sparsehash.sourceforge.net/].
 
-== Install
+== Install SparseHash
+
+on Debian/Ubuntu: apt-get install libsparsehash-dev
+on OS X: brew install google-sparsehash or port install google-sparsehash
+
+== Install Gem
 
 gem install sparsehash
 
